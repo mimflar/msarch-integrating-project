@@ -29,17 +29,27 @@ Expected output (numbers vary a little between runs):
 
 ```
 Small test passed
-sequential, size = 512: average 0.033277 s over 5 runs, 8.07 GFLOPS
+-----------------------------------------
+Matrix Size : 64 x 64
+Sequential  : 0.000229 s (2.29 GFLOPS)
+SIMD + Tile : 0.000057 s (9.26 GFLOPS)
+Speedup     : 4.04x
+----------------------------------------- 
+Matrix Size : 67 x 67
+...
 ```
 
-To try another matrix size, change `int size = 512;` in `main` (in `matmul.c`), then run `make` and `./matmul` again.
+To try another matrix size, change the `test_sizes[]` array in `main` (in `matmul.c`), then run `make` and `./matmul` again.
 
 ## Progress
 
 | Task | Status |
 |---|---|
 | Sequential multiplication with a hand-checked test and timing | Done |
-| ARM64 NEON assembly version | To do |
-| Cache blocking and register reuse | To do |
-| Check that SIMD output matches sequential output | To do |
-| Benchmarks across matrix sizes | To do |
+| ARM64 NEON assembly version | Done |
+| Cache blocking and register reuse | Done |
+| Check that SIMD output matches sequential output | Done |
+| Benchmarks across matrix sizes | Done |
+| Handle matrix sizes that are not multiples of 4 or the tile size | Done |
+| Benchmark against Apple Accelerate reference | To do |
+| Tune cache block size and test on massive matrices | To do |
