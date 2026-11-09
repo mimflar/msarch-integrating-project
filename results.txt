@@ -1,0 +1,32 @@
+./build/bench
+-----------------------------------------
+Matrix Size : 64 x 64
+Sequential  : 0.000140 s (3.73 GFLOPS)
+SIMD + Tile : 0.000029 s (18.20 GFLOPS)
+Speedup     : 4.88x
+-----------------------------------------
+Matrix Size : 67 x 67
+Sequential  : 0.000229 s (2.62 GFLOPS)
+SIMD + Tile : 0.000078 s (7.71 GFLOPS)
+Speedup     : 2.94x
+-----------------------------------------
+Matrix Size : 128 x 128
+Sequential  : 0.001275 s (3.29 GFLOPS)
+SIMD + Tile : 0.000216 s (19.38 GFLOPS)
+Speedup     : 5.89x
+-----------------------------------------
+Matrix Size : 255 x 255
+Sequential  : 0.009697 s (3.42 GFLOPS)
+SIMD + Tile : 0.002287 s (14.50 GFLOPS)
+Speedup     : 4.24x
+-----------------------------------------
+Matrix Size : 512 x 512
+Sequential  : 0.083465 s (3.22 GFLOPS)
+SIMD + Tile : 0.016011 s (16.77 GFLOPS)
+Speedup     : 5.21x
+-----------------------------------------
+Matrix Size : 1024 x 1024
+Sequential  : 0.615835 s (3.49 GFLOPS)
+SIMD + Tile : 0.132882 s (16.16 GFLOPS)
+Speedup     : 4.63x
+-----------------------------------------
