@@ -10,9 +10,9 @@ HEADERS = include/matmul.h include/utils.h
 all: build/bench build/test_matmul
 
 # Benchmark program
-build/bench: $(SRC) src/main.c $(HEADERS)
+build/bench: $(SRC) src/main.c $(HEADERS) Makefile
 	mkdir -p build
-	$(CC) $(CFLAGS) $(SRC) src/main.c -o build/bench
+	$(CC) $(CFLAGS) -DACCELERATE_NEW_LAPACK $(SRC) src/main.c -o build/bench -framework Accelerate
 
 # Test program
 build/test_matmul: $(SRC) tests/test_matmul.c $(HEADERS)

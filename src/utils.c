@@ -16,11 +16,11 @@ void fill_random(float *matrix, int count)
         matrix[i] = (float)((double)rand() / RAND_MAX * 2.0 - 1.0);
 }
 
-int verify_correctness(float *C_seq, float *C_simd, int size) 
+int verify_correctness(float *C_seq, float *C_actual, int size)
 {
     for (int i = 0; i < size * size; i++) {
-        if (fabs(C_seq[i] - C_simd[i]) > 1e-3) {
-            printf("Mismatch at index %d: Seq=%f, SIMD=%f\n", i, C_seq[i], C_simd[i]);
+        if (fabs(C_seq[i] - C_actual[i]) > 1e-3) {
+            printf("Mismatch at index %d: Seq=%f, Actual=%f\n", i, C_seq[i], C_actual[i]);
             return 0;
         }
     }
