@@ -30,3 +30,42 @@ Sequential  : 0.615835 s (3.49 GFLOPS)
 SIMD + Tile : 0.132882 s (16.16 GFLOPS)
 Speedup     : 4.63x
 -----------------------------------------
+
+Milestone 3 NEON tile-size sweep
+================================
+
+Method
+Ran make run TILE=<size> once each for tiles 32, 64, 128, and 256,
+in that order. The benchmark uses the same seeded inputs for every
+tile size. It checks the NEON and Accelerate outputs against the
+sequential result, then averages five CPU-time measurements per
+implementation after one warm-up call.
+
+NEON tile comparison
+Times are in milliseconds. A negative change means tile 32 took
+less CPU time than tile 64, the current default.
+
+Matrix size    Tile 32   Tile 64  Tile 128  Tile 256  32 vs. 64
+  64 x 64        0.018     0.016     0.013     0.013     +12.5%
+  67 x 67        0.038     0.031     0.025     0.027     +22.6%
+ 128 x 128       0.113     0.110     0.105     0.115      +2.7%
+ 255 x 255       0.752     0.783     0.899     1.048      -4.0%
+ 512 x 512       5.343     6.278     7.253     7.657     -14.9%
+1024 x 1024     55.003    60.193    62.818    67.292      -8.6%
+
+Tile 32 had the lowest CPU time at 255 x 255, 512 x 512, and
+1024 x 1024. Tile 128 had the lowest printed time at 67 x 67 and
+128 x 128 and tied tile 256 at 64 x 64. The smallest differences
+were a few microseconds. Each tile was benchmarked in one invocation,
+so the table describes this sweep.
+
+Apple Accelerate reference at tile 64
+Times are in milliseconds. Speedup compares NEON with sequential C.
+
+Matrix size    Seq. ms   NEON ms   Accel. ms   Seq. GFLOPS  NEON GFLOPS  Accel. GFLOPS  Speedup
+  64 x 64        0.086     0.016       0.001          6.07        33.61          655.36    5.54x
+  67 x 67        0.115     0.031       0.002          5.23        19.16          375.95    3.66x
+ 128 x 128       0.705     0.110       0.004          5.95        38.20          953.25    6.42x
+ 255 x 255       4.717     0.783       0.027          7.03        42.33         1237.42    6.02x
+ 512 x 512      34.301     6.278       0.155          7.83        42.76         1734.08    5.46x
+1024 x 1024    273.318    60.193       2.258          7.86        35.68          950.97    4.54x
