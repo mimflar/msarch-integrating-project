@@ -7,23 +7,29 @@ CFLAGS = -O2 -Wall -Iinclude -fno-vectorize -fno-slp-vectorize
 SRC = src/matmul_seq.c src/matmul_simd.c src/utils.c
 HEADERS = include/matmul.h include/utils.h
 
-all: build/bench build/test_matmul
+BUILD_DIR = build
+ifdef TILE
+BUILD_DIR = build/tile-$(TILE)
+TILE_CFLAGS = -DMATMUL_TILE_SIZE=$(TILE)
+endif
+
+all: $(BUILD_DIR)/bench $(BUILD_DIR)/test_matmul
 
 # Benchmark program
-build/bench: $(SRC) src/main.c $(HEADERS) Makefile
-	mkdir -p build
-	$(CC) $(CFLAGS) -DACCELERATE_NEW_LAPACK $(SRC) src/main.c -o build/bench -framework Accelerate
+$(BUILD_DIR)/bench: $(SRC) src/main.c $(HEADERS) Makefile
+	mkdir -p $(@D)
+	$(CC) $(CFLAGS) $(TILE_CFLAGS) -DACCELERATE_NEW_LAPACK $(SRC) src/main.c -o $@ -framework Accelerate
 
 # Test program
-build/test_matmul: $(SRC) tests/test_matmul.c $(HEADERS)
-	mkdir -p build
-	$(CC) $(CFLAGS) $(SRC) tests/test_matmul.c -o build/test_matmul
+$(BUILD_DIR)/test_matmul: $(SRC) tests/test_matmul.c $(HEADERS) Makefile
+	mkdir -p $(@D)
+	$(CC) $(CFLAGS) $(TILE_CFLAGS) $(SRC) tests/test_matmul.c -o $@
 
-run: build/bench
-	./build/bench
+run: $(BUILD_DIR)/bench
+	./$(BUILD_DIR)/bench
 
-test: build/test_matmul
-	./build/test_matmul
+test: $(BUILD_DIR)/test_matmul
+	./$(BUILD_DIR)/test_matmul
 
 clean:
 	rm -rf build

@@ -30,12 +30,13 @@ static double average_cpu_time(void (*matmul)(float *, float *, float *, int),
 
 int main()
 {
-    // sweep across multiple sizes (including non-multiples of 4 and TILE)
+    // sweep across matrix sizes, including sizes that need scalar cleanup.
     int test_sizes[] = {64, 67, 128, 255, 512, 1024};
     int num_sizes = sizeof(test_sizes) / sizeof(test_sizes[0]);
     int runs = 5; // timed runs, after one warm-up run
 
     puts("Average CPU time per multiplication");
+    printf("NEON tile size: %d\n", (int)MATMUL_TILE_SIZE);
 
     for (int s = 0; s < num_sizes; s++) {
         int size = test_sizes[s];

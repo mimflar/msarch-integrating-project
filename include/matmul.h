@@ -1,6 +1,10 @@
 #ifndef MATMUL_H
 #define MATMUL_H
 
+#ifndef MATMUL_TILE_SIZE
+#define MATMUL_TILE_SIZE 64
+#endif
+
 /*
 All matrices are size x size, 32-bit floats, row-major.
 Both functions overwrite C with A x B.

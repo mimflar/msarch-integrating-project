@@ -1,25 +1,30 @@
+#include <limits.h>
 #include "matmul.h"
+
+#if MATMUL_TILE_SIZE <= 0 || MATMUL_TILE_SIZE % 4 != 0 || MATMUL_TILE_SIZE > INT_MAX
+#error "The NEON tile size must be a positive multiple of 4 that fits in an int."
+#endif
 
 /*
 handwritten arm64 neon + cache tiling implementation
 */
 void matmul_simd_tiled(float *A, float *B, float *C, int size)
 {
-    int TILE = 64; // L1 cache block size
+    int tile_size = MATMUL_TILE_SIZE;
     int size4 = (size / 4) * 4; // largest multiple of 4
 
     // init C to zero
     for (int i = 0; i < size * size; i++) C[i] = 0;
 
     // cache tiling - outer loops traverse matrices in blocks
-    for (int rb = 0; rb < size4; rb += TILE) {
-        int r_end = (rb + TILE < size4) ? rb + TILE : size4;
+    for (int rb = 0; rb < size4; rb += tile_size) {
+        int r_end = (rb + tile_size < size4) ? rb + tile_size : size4;
         
-        for (int cb = 0; cb < size4; cb += TILE) {
-            int c_end = (cb + TILE < size4) ? cb + TILE : size4;
+        for (int cb = 0; cb < size4; cb += tile_size) {
+            int c_end = (cb + tile_size < size4) ? cb + tile_size : size4;
             
-            for (int ib = 0; ib < size; ib += TILE) {
-                int i_end = (ib + TILE < size) ? ib + TILE : size;
+            for (int ib = 0; ib < size; ib += tile_size) {
+                int i_end = (ib + tile_size < size) ? ib + tile_size : size;
                 
                 // 4x4 register-blocked assembly micro-kernel
                 for (int row = rb; row < r_end; row += 4) {
